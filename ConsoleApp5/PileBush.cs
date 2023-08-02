@@ -7,62 +7,80 @@ namespace ConsoleApp5
     class PileBush
     {
         public List<Pile> piles = new List<Pile>();
-        double Mx;
         double My;
+        double Mz;
         double N;
         //count piles
-        int n;
-        double sumX;
-        double sumY;
-        public PileBush(double N, double My, double Mx,  int n)
+        public int n;
+        public double sumY;
+
+        public double sumZ;
+        public PileBush(int n)
         {
-            this.Mx = Mx;
+            this.n = n;
+        }
+
+        public PileBush(double N, double My, double Mz,  int n)
+        {
             this.My = My;
+            this.Mz = Mz;
             this.N = N;
+            this.n = n;
             switch(n)
             {
                 case 1:
                     piles.Add(new Pile(0, 0));
 
-                    sumX = 1;sumY = 1; break;
+                    break;
                 case 2:
-                    piles.Add(new Pile(-0.45, 0));
-                    piles.Add(new Pile(0.45, 0));
+                    piles.Add(new Pile(0, -0.45));
+                    piles.Add(new Pile(0, 0.45));
 
-                    sumX = Math.Pow(0.45, 2) * 2;
-                    sumY = Math.Pow(0.45, 2) * 2;
                     break;
                 case 3:
-                    piles.Add(new Pile(-0.3, -0.45));
-                    piles.Add(new Pile(-0.3, 0.45));
-                    piles.Add(new Pile(0.6, 0));
+                    piles.Add(new Pile(0.45, - 0.3));
+                    piles.Add(new Pile(-0.45, -0.3));
+                    piles.Add(new Pile(0, 0.6));
 
-                    sumX = Math.Pow(0.6, 2) * 2 + Math.Pow(1.2, 2);
-                    sumY = Math.Pow(0.9, 2) * 2 + 0;
                     break;
                 case 4:
+                    piles.Add(new Pile(0.45, -0.45));
+                    piles.Add(new Pile(-0.45, -0.45));
                     piles.Add(new Pile(0.45, 0.45));
                     piles.Add(new Pile(-0.45, 0.45));
-                    piles.Add(new Pile(-0.45, -0.45));
-                    piles.Add(new Pile(0.45, -0.45));
 
-                    sumX = Math.Pow(0.45, 2) * 4;
-                    sumY = Math.Pow(0.45, 2) * 4;
                     break;
                 case 5:
+                    piles.Add(new Pile(0.65, -0.65));
+                    piles.Add(new Pile(-0.65, -0.65));
+                    piles.Add(new Pile(0, 0));
                     piles.Add(new Pile(0.65, 0.65));
                     piles.Add(new Pile(-0.65, 0.65));
-                    piles.Add(new Pile(-0.65, -0.65));
-                    piles.Add(new Pile(0.65, -0.65));
-                    piles.Add(new Pile(0, 0));
 
-                    sumX = Math.Pow(0.65, 2) * 4 + 0;
-                    sumY = Math.Pow(0.65, 2) * 4 + 0;
+                    break;
+                case 6:
+                    piles.Add(new Pile(0.9, -0.45));
+                    piles.Add(new Pile(0, -0.45));
+                    piles.Add(new Pile(-0.9, -0.45));
+                    piles.Add(new Pile(0.9, 0.45));
+                    piles.Add(new Pile(0, 0.45));
+                    piles.Add(new Pile(-0.9, 0.45));
+
                     break;
             }
-            foreach(Pile pile in piles)
+            foreach (Pile pile in piles)
             {
-                pile.GetNd(N, Mx, My, n, sumX, sumY);
+                sumY += Math.Pow(pile.Y, 2);
+                sumZ += Math.Pow(pile.Z, 2);
+
+            }
+            foreach (Pile pile in piles)
+            {
+                pile.GetNd(N, My, Mz, n, sumY, sumZ);
+            }
+            for (int i=1;i<=piles.Count;i++)
+            {
+                piles[i-1].num = i;
             }
 
         }

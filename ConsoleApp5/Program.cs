@@ -7,12 +7,29 @@ namespace ConsoleApp5
     {
         static void Main(string[] args)
         {
-            var pileBush = new PileBush(-87.44, -6.62, 0.06, 2);
-            // var pileBush = new PileBush(-40.08, -4.48, -0.78, 2);
+            var pileBush = MaxPileNd(new PileBush(-103.37, 8.12, -3.62, 4), new PileBush(-83.85, 12.24, -2.39, 4));
+
             foreach (var pile in pileBush.piles)
             {
+                Console.WriteLine(pile.NdEq);
                 Console.WriteLine(pile);
             }
+        }
+        public static PileBush MaxPileNd(PileBush pileBush1, PileBush pileBush2)
+        {
+            PileBush pileBushRes = new PileBush(pileBush1.n);
+            for (int i=0; i<pileBush1.n; i++)
+            {
+                if (Math.Abs( pileBush1.piles[i].Nd) < Math.Abs(pileBush2.piles[i].Nd))
+                {
+                    pileBushRes.piles.Add(pileBush2.piles[i]);
+                }
+                else
+                {
+                    pileBushRes.piles.Add(pileBush1.piles[i]);
+                }
+            }
+            return pileBushRes;
         }
     }
 }
