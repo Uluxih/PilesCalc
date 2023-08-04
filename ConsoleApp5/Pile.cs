@@ -22,6 +22,10 @@ namespace ConsoleApp5
         {
             this.Y = Y; this.Z = Z;
         }
+        public Pile(double Y, double Z, double l)
+        {
+            this.Y = Y; this.Z = Z; this.l = l;
+        }
         public Pile(double X, double Y, double N, double My, double Mx, int n, double sumX, double sumY)
         {
             this.Y = X; this.Z = Y;
@@ -40,7 +44,7 @@ namespace ConsoleApp5
             NdEq = res;
             return Nd;
         }
-        public double GetS(Soil soil1, Soil soil2)
+        public double GetS(SoilLayer soil1, SoilLayer soil2)
         {
             double kNu = 2.82 - 3.78 * (soil1.Nu + soil2.Nu) / 2 + 2.18 * (soil1.Nu + soil2.Nu);
             double kNu1 = 2.82 - 3.78 * (soil1.Nu) / 2 + 2.18 * (soil1.Nu);

@@ -7,7 +7,7 @@ namespace ConsoleApp5
     class PileBush
     {
         public List<Pile> piles = new List<Pile>();
-        Soil soil;
+        SoilLayer soil;
         double My;
         double Mz;
         double N;
@@ -74,7 +74,6 @@ namespace ConsoleApp5
             {
                 sumY += Math.Pow(pile.Y, 2);
                 sumZ += Math.Pow(pile.Z, 2);
-
             }
             foreach (Pile pile in piles)
             {
@@ -84,7 +83,6 @@ namespace ConsoleApp5
             {
                 piles[i-1].num = i;
             }
-
         }
     }
 }
