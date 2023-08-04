@@ -7,14 +7,16 @@ namespace ConsoleApp5
     class PileBush
     {
         public List<Pile> piles = new List<Pile>();
+        Soil soil;
         double My;
         double Mz;
         double N;
         //count piles
         public int n;
         public double sumY;
-
         public double sumZ;
+        double[,] delta;
+        
         public PileBush(int n)
         {
             this.n = n;

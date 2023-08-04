@@ -13,6 +13,8 @@ namespace ConsoleApp5
             {
                 Console.WriteLine(pile.NdEq);
                 Console.WriteLine(pile);
+                Console.WriteLine(pile.GetS(new Soil(
+                    ));
             }
         }
         public static PileBush MaxPileNd(PileBush pileBush1, PileBush pileBush2)
