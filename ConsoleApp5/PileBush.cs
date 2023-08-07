@@ -15,11 +15,25 @@ namespace ConsoleApp5
         public int n;
         public double sumY;
         public double sumZ;
-        double[,] delta;
-        
+        public double[,] delta;
+        public double[] Sfull;
+
         public PileBush(int n)
         {
+            delta = new double[n, n];
+            Sfull = new double[n];
             this.n = n;
+        }
+        public void SetDelta()
+        {
+            for (int i = 0; i < this.piles.Count; i++)
+            {
+                Console.WriteLine();
+                for (int j = 0; j < this.piles.Count; j++)
+                {
+                    this.delta[i, j] = this.piles[i].GetDelta(this.piles[j]);
+                }
+            }
         }
 
         public PileBush(double N, double My, double Mz,  int n)
@@ -61,12 +75,12 @@ namespace ConsoleApp5
 
                     break;
                 case 6:
-                    piles.Add(new Pile(0.9, -0.45));
-                    piles.Add(new Pile(0, -0.45));
-                    piles.Add(new Pile(-0.9, -0.45));
-                    piles.Add(new Pile(0.9, 0.45));
-                    piles.Add(new Pile(0, 0.45));
-                    piles.Add(new Pile(-0.9, 0.45));
+                    piles.Add(new Pile(0.45, -0.9));
+                    piles.Add(new Pile(0.45, 0));
+                    piles.Add(new Pile(0.45, 0.9));
+                    piles.Add(new Pile(-0.45, -0.9));
+                    piles.Add(new Pile(-0.45, 0));
+                    piles.Add(new Pile(-0.45, 0.9));
 
                     break;
             }
