@@ -56,7 +56,8 @@ namespace ConsoleApp5
             this.Y = X; this.Z = Y;
             this.Nd = GetNd(N, Mx, My, n, sumX, sumY);
         }
-        public override string ToString() { return num + " Y: " + Y + " Z: " + Z + " Nd: " + Nd; }
+        public override string ToString() { return num + " Y: " + Y + " Z: " + Z + " Nd: " + Nd + " Si: " + GetS()
+                + " Sfull: " + fullS; }
         public double GetNd(double N, double My, double Mz, int n, double sumY, double sumZ)
         {
             double Nd;
