@@ -1,12 +1,20 @@
 ﻿using Aspose.Cells;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.Runtime;
 using System;
+using System.Collections.Generic;
 
 namespace ConsoleApp5
 {
     class Program
     {
+        [CommandMethod("ChangeAttributeBlockStamp")]
         static void Main(string[] args)
         {
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            var db = doc.Database;
+            var ed = doc.Editor;
+            var pileBushes = new List<PileBush>();
             Soil soilChar1 = new Soil(10.8, 0.35);
             Soil soilChar2 = new Soil(6.1, 0.35);
             Soil soilChar3 = new Soil(9, 0.35);
@@ -31,7 +39,6 @@ namespace ConsoleApp5
             int cols = worksheet.Cells.MaxDataColumn;
             for (int i = 1; i < rows; i++)
             {
-
                 var pileBush = MaxPileNd(new PileBush(
                     Convert.ToDouble(worksheet.Cells[i, 1].Value) / 100.0,
                     Convert.ToDouble(worksheet.Cells[i, 2].Value) / 100.0,
@@ -42,7 +49,6 @@ namespace ConsoleApp5
                     Convert.ToDouble(worksheet.Cells[i, 5].Value) / 100.0,
                     Convert.ToDouble(worksheet.Cells[i, 6].Value) / 100.0,
                     Convert.ToInt32(worksheet.Cells[i, 10].Value)));
-
                 foreach (var pile in pileBush.piles)
                 {
                     pile.H = 148.2;
@@ -53,7 +59,6 @@ namespace ConsoleApp5
                     //Console.Write(pile);
                     //Console.WriteLine(" Si= " + pile.GetS(soilLayer1));
                 }
-
                 for (int j = 0; j < pileBush.piles.Count; j++)
                 {
                     Console.WriteLine();
@@ -79,14 +84,10 @@ namespace ConsoleApp5
                 {
                     Console.WriteLine(s);
                 }
-
+                pileBushes.Add(pileBush);
                 // Распечатать разрыв строки
-                  Console.WriteLine(" ");
+                  Console.WriteLine(" "+i);
             }
-            
-           
-                
-            
         }
         public static PileBush MaxPileNd(PileBush pileBush1, PileBush pileBush2)
         {

@@ -76,10 +76,10 @@ namespace ConsoleApp5
                     break;
                 case 6:
                     piles.Add(new Pile(0.45, -0.9));
-                    piles.Add(new Pile(0.45, 0));
-                    piles.Add(new Pile(0.45, 0.9));
                     piles.Add(new Pile(-0.45, -0.9));
+                    piles.Add(new Pile(0.45, 0));
                     piles.Add(new Pile(-0.45, 0));
+                    piles.Add(new Pile(0.45, 0.9));
                     piles.Add(new Pile(-0.45, 0.9));
 
                     break;
