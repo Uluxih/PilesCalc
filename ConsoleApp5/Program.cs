@@ -1,6 +1,5 @@
 ﻿using Aspose.Cells;
-using Autodesk.AutoCAD.ApplicationServices;
-using Autodesk.AutoCAD.Runtime;
+
 using System;
 using System.Collections.Generic;
 
@@ -8,102 +7,46 @@ namespace ConsoleApp5
 {
     class Program
     {
-        [CommandMethod("ChangeAttributeBlockStamp")]
+
         static void Main(string[] args)
         {
-            Document doc = Application.DocumentManager.MdiActiveDocument;
-            var db = doc.Database;
-            var ed = doc.Editor;
-            var pileBushes = new List<PileBush>();
-            Soil soilChar1 = new Soil(10.8, 0.35);
-            Soil soilChar2 = new Soil(6.1, 0.35);
-            Soil soilChar3 = new Soil(9, 0.35);
-            Soil soilChar4 = new Soil(26, 0.42);
-            Soil soilChar5 = new Soil(30.4, 0.35);
+            Soil soilChar1 = new Soil(12.499, 0.25);
+            Soil soilChar2 = new Soil(37.5, 0.25);
 
-            SoilLayer soilLayer1 = new SoilLayer(soilChar1, 1.258);
-            SoilLayer soilLayer2 = new SoilLayer(soilChar2, 4.19, soilLayer1);
-            SoilLayer soilLayer3 = new SoilLayer(soilChar3, 0.71, soilLayer2);
-            SoilLayer soilLayer4 = new SoilLayer(soilChar5, 0.51, soilLayer3);
-            SoilLayer soilLayer5 = new SoilLayer(soilChar4, 15, soilLayer4);
-            soilLayer1.bottonLayer = soilLayer2;
-            soilLayer1.H = 146.93;
 
-            soilLayer5.BindLayer();
-            soilLayer1.SetHLayer(146.93);
+            SoilLayer soilLayer1 = new SoilLayer(soilChar1, 18);
+            SoilLayer soilLayer2 = new SoilLayer(soilChar2, 18, soilLayer1);
 
-            Workbook wb = new Workbook("excel.xlsx");
-            WorksheetCollection collection = wb.Worksheets;
-            Worksheet worksheet = collection[0];
-            int rows = worksheet.Cells.MaxDataRow;
-            int cols = worksheet.Cells.MaxDataColumn;
-            for (int i = 1; i < rows; i++)
+            soilLayer1.bottonLayer = soilLayer2; soilLayer2.topLayer = soilLayer1;
+            soilLayer1.H = -18;
+            PileBush pb = new PileBush(9);
+            pb.piles = new List<Pile> { new Pile(2.4,-2.4), new Pile(0, -2.4), new Pile(-2.4, -2.4),
+            new Pile(2.4,0), new Pile(0, 0), new Pile(-2.4, 0),
+            new Pile(2.4,2.4), new Pile(0, 2.4), new Pile(-2.4, 2.4) };
+            foreach(Pile i in pb.piles)
             {
-                var pileBush = MaxPileNd(new PileBush(
-                    Convert.ToDouble(worksheet.Cells[i, 1].Value) / 100.0,
-                    Convert.ToDouble(worksheet.Cells[i, 2].Value) / 100.0,
-                    Convert.ToDouble(worksheet.Cells[i, 3].Value) / 100.0,
-                    Convert.ToInt32(worksheet.Cells[i, 10].Value)),
-                new PileBush(
-                     Convert.ToDouble(worksheet.Cells[i, 4].Value) / 100.0,
-                    Convert.ToDouble(worksheet.Cells[i, 5].Value) / 100.0,
-                    Convert.ToDouble(worksheet.Cells[i, 6].Value) / 100.0,
-                    Convert.ToInt32(worksheet.Cells[i, 10].Value)));
-                foreach (var pile in pileBush.piles)
-                {
-                    pile.H = 148.2;
-                    pile.l = 10.85;
-                    pile.soil1 = soilLayer1.GetAverageBottomChar(pile.l).soil;
-                    pile.soil2 = pile.GetFootLayer(soilLayer1).soil;
-                    //Console.WriteLine(pile.NdEq);
-                    //Console.Write(pile);
-                    //Console.WriteLine(" Si= " + pile.GetS(soilLayer1));
-                }
-                for (int j = 0; j < pileBush.piles.Count; j++)
-                {
-                    Console.WriteLine();
-                    for (int k = 0; k < pileBush.piles.Count; k++)
-                    {
-                        pileBush.delta[j, k] = pileBush.piles[j].GetDelta(pileBush.piles[k]);
-                        Console.Write(pileBush.delta[j, k] + "\t");
-                    }
-                }
-                Console.WriteLine();
-                for (int j = 0; j < pileBush.piles.Count; j++)
-                {
-                    pileBush.piles[j].fullS= pileBush.piles[j].GetS();
-                    pileBush.Sfull[j] = pileBush.piles[j].GetS();
-                    for (int k = 0; k < pileBush.piles.Count; k++)
-                    {
-                        pileBush.piles[j].fullS += pileBush.delta[j, k] * pileBush.piles[k].GetS();
-                        pileBush.Sfull[j] += pileBush.delta[j, k] * pileBush.piles[k].GetS();
-                    }
-                }
-                Console.WriteLine();
-                foreach (var s in pileBush.piles)
-                {
-                    Console.WriteLine(s);
-                }
-                pileBushes.Add(pileBush);
-                // Распечатать разрыв строки
-                  Console.WriteLine(" "+i);
+                i.d = 0.5316; i.soil1 = soilLayer1.soil;
+                i.soil2 = soilChar2;
+                i.l = 18; i.Nd = 2;
             }
-        }
-        public static PileBush MaxPileNd(PileBush pileBush1, PileBush pileBush2)
-        {
-            PileBush pileBushRes = new PileBush(pileBush1.n);
-            for (int i=0; i<pileBush1.n; i++)
+            pb.SetDelta();
+            foreach (Pile i in pb.piles)
             {
-                if (Math.Abs( pileBush1.piles[i].Nd) < Math.Abs(pileBush2.piles[i].Nd))
+                Console.WriteLine(i.GetS());
+            }
+            Console.WriteLine();
+            for(int i=0; i<9;i++)
+            {
+                pb.piles[i].fullS += pb.piles[i].GetS();
+                for(int j=0;j<9;j++)
                 {
-                    pileBushRes.piles.Add(pileBush2.piles[i]);
-                }
-                else
-                {
-                    pileBushRes.piles.Add(pileBush1.piles[i]);
+                    double a = pb.piles[i].GetSad(pb.piles[j]);
+                    var b = pb.piles[i].GetDelta(pb.piles[j]);
+                    var c = pb.piles[i].GetS();
+                    pb.piles[i].fullS += pb.piles[i].GetSad(pb.piles[j]);
                 }
             }
-            return pileBushRes;
+            Console.WriteLine();
         }
     }
 }

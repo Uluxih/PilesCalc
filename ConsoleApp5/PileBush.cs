@@ -28,7 +28,7 @@ namespace ConsoleApp5
         {
             for (int i = 0; i < this.piles.Count; i++)
             {
-                Console.WriteLine();
+                //Console.WriteLine();
                 for (int j = 0; j < this.piles.Count; j++)
                 {
                     this.delta[i, j] = this.piles[i].GetDelta(this.piles[j]);
