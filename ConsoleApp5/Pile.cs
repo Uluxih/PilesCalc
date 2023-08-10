@@ -97,7 +97,7 @@ namespace ConsoleApp5
         }
         public double GetSad(Pile pile)
         {
-            return this.GetDelta(pile) * this.Nd/(this.soil1.G*this.l);
+            return this.GetDelta(pile) * pile.Nd/(pile.soil1.G*pile.l);
         }
         public double GetDelta(Pile pile2)
         {
