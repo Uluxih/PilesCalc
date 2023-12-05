@@ -10,6 +10,7 @@ namespace PileCalc1_2
 
         static void Main(string[] args)
         {
+
             var pileBushes = new List<PileBush>();
             Soil soilChar1 = new Soil(10.8, 0.35);
             Soil soilChar2 = new Soil(6.1, 0.35);
