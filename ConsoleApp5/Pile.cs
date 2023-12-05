@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ConsoleApp5
+namespace PileCalc1_2
 {
     public class Pile
     {

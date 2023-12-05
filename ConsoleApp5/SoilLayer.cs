@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp5
+﻿namespace PileCalc1_2
 {
     public class SoilLayer
     {
