@@ -7,10 +7,11 @@ namespace PileCalc1_2
     class PileBush
     {
         public List<Pile> piles = new List<Pile>();
-        SoilLayer soil;
+        readonly SoilLayer soil;
         double My;
         double Mz;
         double N;
+        public string axis;
         //count piles
         public int n;
         public double sumY;
@@ -60,10 +61,10 @@ namespace PileCalc1_2
 
                     break;
                 case 4:
-                    piles.Add(new Pile(0.45, -0.45));
-                    piles.Add(new Pile(-0.45, -0.45));
-                    piles.Add(new Pile(0.45, 0.45));
-                    piles.Add(new Pile(-0.45, 0.45));
+                    piles.Add(new Pile(0.5, -0.6));
+                    piles.Add(new Pile(-0.5, -0.6));
+                    piles.Add(new Pile(0.5, 0.6));
+                    piles.Add(new Pile(-0.5, 0.6));
 
                     break;
                 case 5:
@@ -75,13 +76,45 @@ namespace PileCalc1_2
 
                     break;
                 case 6:
+                    piles.Add(new Pile(0.9, -0.9));
+                    piles.Add(new Pile(-0.9, -0.9));
+                    piles.Add(new Pile(0.9, 0));
+                    piles.Add(new Pile(-0.9, 0));
+                    piles.Add(new Pile(0.9, 0.9));
+                    piles.Add(new Pile(-0.9, 0.9));
+
+                    break;
+
+                case 7:
                     piles.Add(new Pile(0.45, -0.9));
                     piles.Add(new Pile(-0.45, -0.9));
-                    piles.Add(new Pile(0.45, 0));
-                    piles.Add(new Pile(-0.45, 0));
+                    piles.Add(new Pile(0.9, 0));
+                    piles.Add(new Pile(0, 0));
+                    piles.Add(new Pile(-0.9, 0));
                     piles.Add(new Pile(0.45, 0.9));
                     piles.Add(new Pile(-0.45, 0.9));
+                    break;
 
+                case 8:
+                    piles.Add(new Pile(0.9, -0.9));
+                    piles.Add(new Pile(0, -0.9));
+                    piles.Add(new Pile(-0.9, -0.9));
+                    piles.Add(new Pile(0.45, 0));
+                    piles.Add(new Pile(-0.45, 0));
+                    piles.Add(new Pile(0.9, 0.9));
+                    piles.Add(new Pile(0, 0.9));
+                    piles.Add(new Pile(-0.9, 0.9));
+                    break;
+                case 9:
+                    piles.Add(new Pile(0.9, -0.9));
+                    piles.Add(new Pile(0, -0.9));
+                    piles.Add(new Pile(-0.9, -0.9));
+                    piles.Add(new Pile(0.9, 0));
+                    piles.Add(new Pile(0, 0));
+                    piles.Add(new Pile(-0.9, 0));
+                    piles.Add(new Pile(0.9, 0.9));
+                    piles.Add(new Pile(0, 0.9));
+                    piles.Add(new Pile(-0.9, 0.9));
                     break;
             }
             foreach (Pile pile in piles)

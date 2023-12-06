@@ -10,7 +10,7 @@ namespace PileCalc1_2
 
         static void Main(string[] args)
         {
-
+            double Fd = -46;
             var pileBushes = new List<PileBush>();
             Soil soilChar1 = new Soil(10.8, 0.35);
             Soil soilChar2 = new Soil(6.1, 0.35);
@@ -34,19 +34,21 @@ namespace PileCalc1_2
             Worksheet worksheet = collection[0];
             int rows = worksheet.Cells.MaxDataRow;
             int cols = worksheet.Cells.MaxDataColumn;
-            for (int i = 1; i < rows; i++)
+            for (int i = 1; i <= rows; i++)
             {
+                //Единица измерения МН или МН*м
                 var pileBush = MaxPileNd(new PileBush(
-                    Convert.ToDouble(worksheet.Cells[i, 1].Value) / 100.0,
+                    Convert.ToDouble(worksheet.Cells[i, 1].Value) / 100.0 - 92.5 / 100,
                     Convert.ToDouble(worksheet.Cells[i, 2].Value) / 100.0,
                     Convert.ToDouble(worksheet.Cells[i, 3].Value) / 100.0,
                     Convert.ToInt32(worksheet.Cells[i, 10].Value)),
                 new PileBush(
-                     Convert.ToDouble(worksheet.Cells[i, 4].Value) / 100.0,
+                     Convert.ToDouble(worksheet.Cells[i, 4].Value) / 100.0 - 92.5 / 100,
                     Convert.ToDouble(worksheet.Cells[i, 5].Value) / 100.0,
                     Convert.ToDouble(worksheet.Cells[i, 6].Value) / 100.0,
                     Convert.ToInt32(worksheet.Cells[i, 10].Value)));
-
+                pileBush.axis = (worksheet.Cells[i, 0].Value.ToString()+":");
+                //задаю характеристики грунтов для каждой сваи
                 foreach (var pile in pileBush.piles)
                 {
                     pile.H = 148.2;
@@ -78,10 +80,22 @@ namespace PileCalc1_2
                     }
                 }
                 Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(pileBush.axis);
+                Console.ForegroundColor = ConsoleColor.White;
+                double NdmaxInBush = 0;
                 foreach (var s in pileBush.piles)
                 {
+                    if (NdmaxInBush >= s.Nd)
+                        NdmaxInBush = s.Nd;
                     Console.WriteLine(s);
                 }
+                if(NdmaxInBush*100<Fd/1.3)
+                    Console.ForegroundColor = ConsoleColor.Red;
+                else
+                    Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Nd, тс= " + Math.Round(NdmaxInBush * 100, 2));
+                Console.ForegroundColor = ConsoleColor.White;
                 pileBushes.Add(pileBush);
                 // Распечатать разрыв строки
                   Console.WriteLine(" "+i);

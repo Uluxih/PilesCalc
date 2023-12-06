@@ -56,8 +56,8 @@ namespace PileCalc1_2
             this.Y = X; this.Z = Y;
             this.Nd = GetNd(N, Mx, My, n, sumX, sumY);
         }
-        public override string ToString() { return num + " Y: " + Y + " Z: " + Z + " Nd: " + Nd + " Si: " + GetS()
-                + " Sfull: " + fullS; }
+        public override string ToString() { return num + " Y: " + Y + " Z: " + Z + " Nd, тс: " + Nd*100 + " Si, мм: " + GetS()*1000
+                + " Sfull, мм: " + fullS*1000; }
         public double GetNd(double N, double My, double Mz, int n, double sumY, double sumZ)
         {
             double Nd;
