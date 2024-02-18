@@ -7,7 +7,7 @@ namespace PileCalc1_2
     class PileBush
     {
         public List<Pile> piles = new List<Pile>();
-        readonly SoilLayer soil;
+        public SoilLayer soil;
         double My;
         double Mz;
         double N;

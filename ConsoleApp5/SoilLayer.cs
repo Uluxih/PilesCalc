@@ -42,12 +42,29 @@
             
             while(soilLayer != null && averageL<=l)
             {
-                averageL += soilLayer.l;
-                //averageGL += this.l * this.G;
-                averageEL += soilLayer.l * soilLayer.soil.E;
-                averageNuL += soilLayer.l * soilLayer.soil.Nu;
-                soilLayer = soilLayer.bottonLayer;
+                if (averageL + soilLayer.l <= l)
+                {
+                    
+                    //averageGL += this.l * this.G;
+                    averageEL += soilLayer.l * soilLayer.soil.E;
+                    averageNuL += soilLayer.l * soilLayer.soil.Nu;
+                    averageL += soilLayer.l;
+                    soilLayer = soilLayer.bottonLayer;
+                    
+                }
+                else
+                {
+                    
+                    //averageGL += this.l * this.G;
+                    averageEL += (l - averageL) * soilLayer.soil.E;
+                    averageNuL += (l - averageL) * soilLayer.soil.Nu;
+                    averageL += l - averageL;
+                    soilLayer = soilLayer.bottonLayer;
+                    
+                }
+
             }
+          
             return new SoilLayer(averageEL / averageL, averageNuL / averageL, averageL);
         }
         /// <summary>

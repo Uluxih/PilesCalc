@@ -10,7 +10,7 @@ namespace PileCalc1_2
 
         static void Main(string[] args)
         {
-            double Fd = -46;
+            double Fd = -42;
             var pileBushes = new List<PileBush>();
             Soil soilChar1 = new Soil(10.8, 0.35);
             Soil soilChar2 = new Soil(6.1, 0.35);
@@ -29,77 +29,132 @@ namespace PileCalc1_2
             soilLayer5.BindLayer();
             soilLayer1.SetHLayer(146.93);
 
-            Workbook wb = new Workbook("excel.xlsx");
-            WorksheetCollection collection = wb.Worksheets;
-            Worksheet worksheet = collection[0];
-            int rows = worksheet.Cells.MaxDataRow;
-            int cols = worksheet.Cells.MaxDataColumn;
-            for (int i = 1; i <= rows; i++)
+            var pileBush = new PileBush(37);
+            var piles = new List<Pile>();
+            for (double y = 1.1; y <= 4.4; y += 1.1)
             {
-                //Единица измерения МН или МН*м
-                var pileBush = MaxPileNd(new PileBush(
-                    Convert.ToDouble(worksheet.Cells[i, 1].Value) / 100.0 - 92.5 / 100,
-                    Convert.ToDouble(worksheet.Cells[i, 2].Value) / 100.0,
-                    Convert.ToDouble(worksheet.Cells[i, 3].Value) / 100.0,
-                    Convert.ToInt32(worksheet.Cells[i, 10].Value)),
-                new PileBush(
-                     Convert.ToDouble(worksheet.Cells[i, 4].Value) / 100.0 - 92.5 / 100,
-                    Convert.ToDouble(worksheet.Cells[i, 5].Value) / 100.0,
-                    Convert.ToDouble(worksheet.Cells[i, 6].Value) / 100.0,
-                    Convert.ToInt32(worksheet.Cells[i, 10].Value)));
-                pileBush.axis = (worksheet.Cells[i, 0].Value.ToString()+":");
-                //задаю характеристики грунтов для каждой сваи
-                foreach (var pile in pileBush.piles)
+                for(double z = 0; z <= 6.65; z += 0.95)
                 {
-                    pile.H = 148.2;
-                    pile.l = 10.85;
-                    pile.soil1 = soilLayer1.GetAverageBottomChar(pile.l).soil;
-                    pile.soil2 = pile.GetFootLayer(soilLayer1).soil;
-                    //Console.WriteLine(pile.NdEq);
-                    //Console.Write(pile);
-                    //Console.WriteLine(" Si= " + pile.GetS(soilLayer1));
+                    piles.Add(new Pile(y, z));
                 }
-                for (int j = 0; j < pileBush.piles.Count; j++)
-                {
-                    Console.WriteLine();
-                    for (int k = 0; k < pileBush.piles.Count; k++)
-                    {
-                        pileBush.delta[j, k] = pileBush.piles[j].GetDelta(pileBush.piles[k]);
-                        Console.Write(pileBush.delta[j, k] + "\t");
-                    }
-                }
-                Console.WriteLine();
-                for (int j = 0; j < pileBush.piles.Count; j++)
-                {
-                    pileBush.piles[j].fullS= pileBush.piles[j].GetS();
-                    pileBush.Sfull[j] = pileBush.piles[j].GetS();
-                    for (int k = 0; k < pileBush.piles.Count; k++)
-                    {
-                        pileBush.piles[j].fullS += pileBush.delta[j, k] * pileBush.piles[k].GetS();
-                        pileBush.Sfull[j] += pileBush.delta[j, k] * pileBush.piles[k].GetS();
-                    }
-                }
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine(pileBush.axis);
-                Console.ForegroundColor = ConsoleColor.White;
-                double NdmaxInBush = 0;
-                foreach (var s in pileBush.piles)
-                {
-                    if (NdmaxInBush >= s.Nd)
-                        NdmaxInBush = s.Nd;
-                    Console.WriteLine(s);
-                }
-                if(NdmaxInBush*100<Fd/1.3)
-                    Console.ForegroundColor = ConsoleColor.Red;
-                else
-                    Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Nd, тс= " + Math.Round(NdmaxInBush * 100, 2));
-                Console.ForegroundColor = ConsoleColor.White;
-                pileBushes.Add(pileBush);
-                // Распечатать разрыв строки
-                  Console.WriteLine(" "+i);
             }
+            piles.Add(new Pile(0, 5.7));
+            piles.Add(new Pile(0, 6.65));
+            piles.Add(new Pile(0, 7.6));
+            piles.Add(new Pile(1.1, 7.6));
+            piles.Add(new Pile(2.2, 7.6));
+            pileBush.piles = piles;
+
+            foreach (var pile in pileBush.piles)
+            {
+                pile.H = 148.2;
+                pile.l = 10.85;
+                pile.soil1 = soilLayer1.GetAverageBottomChar(pile.l).soil;
+                pile.soil2 = pile.GetFootLayer(soilLayer1).soil;
+                pile.Nd = 1;
+                //Console.WriteLine(pile.NdEq);
+                //Console.Write(pile);
+                //Console.WriteLine(" Si= " + pile.GetS(soilLayer1));
+            }
+            Console.WriteLine(pileBush.piles[0].soil1.G*pileBush.piles[0].l);
+
+            for (int j = 0; j < pileBush.piles.Count; j++)
+            {
+                pileBush.piles[j].fullS = pileBush.piles[j].GetS();
+                pileBush.Sfull[j] = pileBush.piles[j].GetS();
+                for (int k = 0; k < pileBush.piles.Count; k++)
+                {
+                    pileBush.piles[j].fullS += pileBush.delta[j, k] * pileBush.piles[k].GetS();
+                    pileBush.Sfull[j] += pileBush.delta[j, k] * pileBush.piles[k].GetS();
+                }
+            }
+
+            for (int j = 0; j < pileBush.piles.Count; j++)
+            {
+                Console.WriteLine();
+                for (int k = 0; k < pileBush.piles.Count; k++)
+                {
+                    Console.Write(pileBush.piles[j].fullS+"\t"); 
+                }
+                Console.WriteLine();
+            }
+
+
+
+            #region
+            //Workbook wb = new Workbook("excel.xlsx");
+            //WorksheetCollection collection = wb.Worksheets;
+            //Worksheet worksheet = collection[0];
+            //int rows = worksheet.Cells.MaxDataRow;
+            //int cols = worksheet.Cells.MaxDataColumn;
+
+            //for (int i = 1; i <= rows; i++)
+            //{
+            //    //Единица измерения МН или МН*м
+            //    var pileBush = MaxPileNd(new PileBush(
+            //        Convert.ToDouble(worksheet.Cells[i, 1].Value) / 100.0 - 92.5 / 100,
+            //        Convert.ToDouble(worksheet.Cells[i, 2].Value) / 100.0,
+            //        Convert.ToDouble(worksheet.Cells[i, 3].Value) / 100.0,
+            //        Convert.ToInt32(worksheet.Cells[i, 10].Value)),
+            //    new PileBush(
+            //         Convert.ToDouble(worksheet.Cells[i, 4].Value) / 100.0 - 92.5 / 100,
+            //        Convert.ToDouble(worksheet.Cells[i, 5].Value) / 100.0,
+            //        Convert.ToDouble(worksheet.Cells[i, 6].Value) / 100.0,
+            //        Convert.ToInt32(worksheet.Cells[i, 10].Value)));
+            //    pileBush.axis = (worksheet.Cells[i, 0].Value.ToString()+":");
+            //    //задаю характеристики грунтов для каждой сваи
+            //    foreach (var pile in pileBush.piles)
+            //    {
+            //        pile.H = 148.2;
+            //        pile.l = 10.85;
+            //        pile.soil1 = soilLayer1.GetAverageBottomChar(pile.l).soil;
+            //        pile.soil2 = pile.GetFootLayer(soilLayer1).soil;
+            //        //Console.WriteLine(pile.NdEq);
+            //        //Console.Write(pile);
+            //        //Console.WriteLine(" Si= " + pile.GetS(soilLayer1));
+            //    }
+            //    for (int j = 0; j < pileBush.piles.Count; j++)
+            //    {
+            //        Console.WriteLine();
+            //        for (int k = 0; k < pileBush.piles.Count; k++)
+            //        {
+            //            pileBush.delta[j, k] = pileBush.piles[j].GetDelta(pileBush.piles[k]);
+            //            Console.Write(pileBush.delta[j, k] + "\t");
+            //        }
+            //    }
+            //    Console.WriteLine();
+            //    for (int j = 0; j < pileBush.piles.Count; j++)
+            //    {
+            //        pileBush.piles[j].fullS= pileBush.piles[j].GetS();
+            //        pileBush.Sfull[j] = pileBush.piles[j].GetS();
+            //        for (int k = 0; k < pileBush.piles.Count; k++)
+            //        {
+            //            pileBush.piles[j].fullS += pileBush.delta[j, k] * pileBush.piles[k].GetS();
+            //            pileBush.Sfull[j] += pileBush.delta[j, k] * pileBush.piles[k].GetS();
+            //        }
+            //    }
+            //    Console.WriteLine();
+            //    Console.ForegroundColor = ConsoleColor.Green;
+            //    Console.WriteLine(pileBush.axis);
+            //    Console.ForegroundColor = ConsoleColor.White;
+            //    double NdmaxInBush = 0;
+            //    foreach (var s in pileBush.piles)
+            //    {
+            //        if (NdmaxInBush >= s.Nd)
+            //            NdmaxInBush = s.Nd;
+            //        Console.WriteLine(s);
+            //    }
+            //    if(NdmaxInBush*100<Fd/1.3)
+            //        Console.ForegroundColor = ConsoleColor.Red;
+            //    else
+            //        Console.ForegroundColor = ConsoleColor.Green;
+            //    Console.WriteLine("Nd, тс= " + Math.Round(NdmaxInBush * 100, 2));
+            //    Console.ForegroundColor = ConsoleColor.White;
+            //    pileBushes.Add(pileBush);
+            //    // Распечатать разрыв строки
+            //      Console.WriteLine(" "+i);
+            //}
+            #endregion
         }
         public static PileBush MaxPileNd(PileBush pileBush1, PileBush pileBush2)
         {

@@ -27,6 +27,8 @@ namespace PileCalc1_2
         //Мпа
         public double E=30000;
         public double d=0.3;
+        ////Связь конечной жесткости для нижнего торца сваи без влияния
+        //public double Kz;
         public double A
         {
             get
